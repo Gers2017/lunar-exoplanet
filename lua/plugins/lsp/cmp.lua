@@ -1,7 +1,7 @@
 -- https://github.com/hrsh7th/nvim-cmp
 
 local cmp = req('cmp')
-local luasnip = require("luasnip")
+-- local luasnip = require("luasnip")
 local kind_icons = require("plugins.lsp.kind")
 
 cmp.setup({
@@ -55,9 +55,9 @@ cmp.setup({
   },
   sources = cmp.config.sources({
       { name = 'nvim_lsp' },
+      { name = 'nvim_lua' },
+      { name = 'buffer', keyword_length = 5 },
       { name = 'luasnip' },
-      { name = 'buffer' },
-	  { name = 'nvim_lua' },
       { name = "path" },
     }),
   experimental = {
