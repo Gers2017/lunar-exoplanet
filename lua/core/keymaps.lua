@@ -1,67 +1,78 @@
 local default_opts = { noremap = true, silent = true }
-local keymap = function(mode, key, cmd, opts)
-    vim.api.nvim_set_keymap(mode, key, cmd, opts or default_opts)
+local function map(mode, key, cmd, opts)
+  vim.api.nvim_set_keymap(mode, key, cmd, opts or default_opts)
 end
 
--- keymap("", "<Space>", "<Nop>")
--- vim.g.mapleader = " "
--- vim.g.maplocalleader = " "
+map('', '<Space>', '<Nop>')
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
 
--- Normal --
--- User
-keymap("n", "<C-l>", "V")
-keymap("n", "Y", "Vy")
+local M = {}
 
--- Telescope
-keymap("n", "<C-p>", "<cmd>Telescope find_files<CR>")
-keymap("n", "<leader>fg", "<cmd>Telescope live_grep<CR>")
+M.setup = function ()
+  -- User
+  map('n', 'Y', 'Vy')
+  
+  -- Telescope
+  map('n', '<C-p>', ':Telescope find_files<cr>')
+  map('n', '<ldeader>tg', ':Telescope live_grep<cr>')
+  
+  -- NvimTree
+  map('n', '<C-b>', ':NvimTreeToggle<cr>')
+  map('n', '<leader>nc', ':NvimTreeClose<cr>')
+  map('n', '<leader>ne', ':NvimTreeFocus<cr>')
+  
+  -- Window navigation
+  map('n', '<C-h>', '<C-w>h')
+  map('n', '<C-j>', '<C-w>j')
+  map('n', '<C-k>', '<C-w>k')
+  map('n', '<C-l>', '<C-w>l')
+  
+  -- Buffers
+  map('n', '<A-Right>', '<cmd>bn<cr>')
+  map('n', '<A-Left>', '<cmd>bp<cr>')
+  map('n', '<A-c>', '<cmd>bd<cr>')
+  
+  -- Resize with arrows
+  map('n', '<C-Up>', ':resize -2<cr>')
+  map('n', '<C-Down>', ':resize +2<cr>')
+  map('n', '<C-Left>', ':vertical resize -2<cr>')
+  map('n', '<C-Right>', ':vertical resize +2<cr>')
+  
+  -- Move text up and down normal mode
+  map('n', '<A-j>', '<Esc>:m .+1<cr>==gi')
+  map('n', '<A-k>', '<Esc>:m .-2<cr>==gi')
+  
+  -- Stay in indent mode
+  map('v', '<', '<gv')
+  map('v', '>', '>gv')
+  
+  -- Move text up and down visual mode
+  map('v', '<A-j>', ':m .+1<cr>==')
+  map('v', '<A-k>', ':m .-2<cr>==')
+  map('v', 'p', '"_dP')
+  
+  -- Move text up and down visual block mode
+  map("x", "J", ":move '>+1<cr>gv-gv")
+  map("x", "K", ":move '<-2<cr>gv-gv")
+  map("x", "<A-j>", ":move '>+1<cr>gv-gv")
+  map("x", "<A-k>", ":move '<-2<cr>gv-gv")
+end
 
--- Better window navigation
-keymap("n", "<C-h>", "<C-w>h")
-keymap("n", "<C-j>", "<C-w>j")
-keymap("n", "<C-k>", "<C-w>k")
-keymap("n", "<C-l>", "<C-w>l")
+M.lspconfig = function ()
+  map('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>')
+  map('n', '<F3>', '<cmd>lua vim.lsp.buf.formatting()<cr>')
+  map('n', '<F12>', '<cmd>lua vim.lsp.buf.definition()<cr>')
 
--- Buffers
-keymap('n', '<A-Right>', '<cmd>bn<CR>')
-keymap('n', '<A-Left>', '<cmd>bp<CR>')
-keymap('n', '<A-c>', '<cmd>bd<CR>')
+  map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>")
+  map('n', 'gd', '<cmd>lua vim.lsp.buf.declaration()<cr>')
+  map('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>')
+  map('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>')
+  map('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
+  map('n', 'gp', '<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>')
+  map('n', 'gn', '<cmd>lua vim.lsp.diagnostic.goto_next()<cr>')
+  map('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>')
+  vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
+end
 
--- Resize with arrows
-keymap("n", "<C-Up>", ":resize -2<CR>")
-keymap("n", "<C-Down>", ":resize +2<CR>")
-keymap("n", "<C-Left>", ":vertical resize -2<CR>")
-keymap("n", "<C-Right>", ":vertical resize +2<CR>")
-
--- Move text up and down
-keymap("n", "<A-j>", "<Esc>:m .+1<CR>==gi")
-keymap("n", "<A-k>", "<Esc>:m .-2<CR>==gi")
-
--- Visual --
--- Stay in indent mode
-keymap("v", "<", "<gv")
-keymap("v", ">", ">gv")
-
--- Move text up and down
-keymap("v", "<A-j>", ":m .+1<CR>==")
-keymap("v", "<A-k>", ":m .-2<CR>==")
-keymap("v", "p", '"_dP')
-
--- Visual Block --
--- Move text up and down
-keymap("x", "J", ":move '>+1<CR>gv-gv")
-keymap("x", "K", ":move '<-2<CR>gv-gv")
-keymap("x", "<A-j>", ":move '>+1<CR>gv-gv")
-keymap("x", "<A-k>", ":move '<-2<CR>gv-gv")
-
-keymap('n', '<space>,', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>')
-keymap('n', '<space>;', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>')
-keymap('n', '<space>a', '<cmd>lua vim.lsp.buf.code_action()<CR>')
-keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>")
-keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
-keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>')
-keymap('n', '<space>h', '<cmd>lua vim.lsp.buf.hover()<CR>')
-keymap('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<CR>')
-keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>')
-keymap('n', '<space>s', '<cmd>lua vim.lsp.buf.document_symbol()<CR>')
-
+return M

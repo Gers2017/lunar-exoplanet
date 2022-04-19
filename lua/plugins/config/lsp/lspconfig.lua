@@ -1,11 +1,7 @@
 -- https://github.com/williamboman/nvim-lsp-installer/
 
-local lsp_installer = req('nvim-lsp-installer')
-if not lsp_installer then
-    return
-end
-
-local capabilities = req('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local lsp_installer = require'nvim-lsp-installer'
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 local function lsp_highlight_document(client)
   -- Set autocommands conditional on server_capabilities
@@ -23,11 +19,8 @@ local function lsp_highlight_document(client)
   end
 end
 
-local on_attach = function(client, bufnr)
-  if client.name == "tsserver" then
-    client.resolved_capabilities.document_formatting = false
-  end
-  -- lsp_keymaps(bufnr)
+function on_attach(client, bufnr)
+  require('core.keymaps').lspconfig()
   lsp_highlight_document(client)
 end
 
