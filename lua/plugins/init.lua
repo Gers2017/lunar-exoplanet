@@ -23,7 +23,9 @@ require('packer').startup(function()
   -- gitsigns
   use 'lewis6991/gitsigns.nvim'
   -- commentary
-  use 'tpope/vim-commentary'
+  -- gcc to commnent out a line (takes a count)
+  -- gc to comment out the target of a motion
+  use 'tpope/vim-commentary' -- gcc to comment out a line
   -- indent-blankline
   use 'lukas-reineke/indent-blankline.nvim'
   -- friendly snippets

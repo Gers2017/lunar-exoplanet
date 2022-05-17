@@ -20,7 +20,8 @@ M.setup = function ()
   -- NvimTree
   map('n', '<C-b>', ':NvimTreeToggle<cr>')
   map('n', '<leader>nc', ':NvimTreeClose<cr>')
-  map('n', '<leader>ne', ':NvimTreeFocus<cr>')
+  map('n', '<leader>nf', ':NvimTreeFocus<cr>')
+  map('n', '<C-f>', ':NvimTreeFocus<cr>')
   
   -- Window navigation
   map('n', '<C-h>', '<C-w>h')
